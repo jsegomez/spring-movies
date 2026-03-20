@@ -1,0 +1,9 @@
+spring.application.name=Movies
+server.port=3000
+server.servlet.context-path=/api
+spring.profiles.active=development
+
+# Obtén tu API key en https://platform.openai.com/api-keys
+langchain4j.open-ai.chat-model.api-key=YOUR_OPENAI_API_KEY_HERE
+langchain4j.open-ai.chat-model.model-name=gpt-4o
+
