@@ -1,14 +1,17 @@
 package com.jsegomez.movies.persistence.mapper;
 
-import com.jsegomez.movies.domain.dto.MovieDto;
-import com.jsegomez.movies.persistence.entities.MovieEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.InheritInverseConfiguration;
 
 import java.util.List;
 
+import com.jsegomez.movies.domain.dto.MovieDto;
+import com.jsegomez.movies.persistence.entities.MovieEntity;
+
 @Mapper(componentModel = "spring")
 public interface MovieMapper {
+    @Mapping(target = "id",            source = "mvId")
     @Mapping(target = "title",         source = "mvTitle")
     @Mapping(target = "duration",      source = "mvDuration")
     @Mapping(target = "genre",         source = "mvGenre")
@@ -17,12 +20,7 @@ public interface MovieMapper {
     @Mapping(target = "isAvailable",   source = "mvIsAvailable")
     MovieDto toDto(MovieEntity movieEntity);
 
-    @Mapping(target = "mvTitle",         source = "title")
-    @Mapping(target = "mvDuration",      source = "duration")
-    @Mapping(target = "mvGenre",         source = "genre")
-    @Mapping(target = "mvClassification", source = "classification")
-    @Mapping(target = "mvReleaseDate",   source = "releaseDate")
-    @Mapping(target = "mvIsAvailable",   source = "isAvailable")
+    @InheritInverseConfiguration
     MovieEntity toEntity(MovieDto movieDto);
 
     List<MovieDto> toDtoList(Iterable<MovieEntity> movieEntities);

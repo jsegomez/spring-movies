@@ -1,7 +1,13 @@
 package com.jsegomez.movies.persistence.entities.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.Map;
+
+@Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Classification {
 
@@ -22,20 +28,17 @@ public enum Classification {
         this.description = description;
     }
 
-    public int getMinAge() {
-        return minAge;
-    }
-
     public String getName() {
         return this.name();
     }
 
-    public String getLabel() {
-        return label;
-    }
-
-    public String getDescription() {
-        return description;
+    @JsonCreator
+    public static Classification fromJson(Map<String, Object> map) {
+        String name = (String) map.get("name");
+        return Arrays.stream(values())
+                .filter(c -> c.name().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unknown classification: " + name));
     }
 }
 

@@ -1,12 +1,14 @@
 package com.jsegomez.movies.web.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.jsegomez.movies.domain.dto.MovieDto;
 import com.jsegomez.movies.domain.services.MovieService;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -18,8 +20,24 @@ public class MovieController {
         this.movieServ = movieServ;
     }
 
-    @GetMapping()
-    public List<MovieDto> getAll(){
-        return movieServ.findAll();
+    @GetMapping
+    public ResponseEntity<List<MovieDto>> getAll(){
+        return ResponseEntity.ok(movieServ.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MovieDto> getById(@PathVariable Long id){
+        return ResponseEntity.ok(movieServ.findById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<MovieDto> create(@Valid @RequestBody MovieDto movieDto){
+        MovieDto created = movieServ.create(movieDto);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(created.id())
+                .toUri();
+        return ResponseEntity.created(location).body(created);
     }
 }
